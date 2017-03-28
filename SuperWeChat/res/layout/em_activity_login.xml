@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eff2f6"
+    android:background="@color/black2"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -11,11 +11,22 @@
         android:layout_weight="1" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-            android:src="@drawable/em_welcom_logo" />
+            android:background="@mipmap/ic_launcher"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WeChat"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:layout_below="@id/icon"
+            android:layout_centerHorizontal="true"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -29,7 +40,8 @@
             android:layout_height="54dp"
             android:layout_marginLeft="28dp"
             android:layout_marginRight="28dp"
-            android:background="#fff" >
+            android:background="#fff"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_username"
@@ -61,7 +73,8 @@
             android:layout_marginLeft="28dp"
             android:layout_marginRight="28dp"
             android:layout_marginTop="10dp"
-            android:background="#fff" >
+            android:background="#fff"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_password"
@@ -86,45 +99,41 @@
                 android:imeOptions="actionDone"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rl_password"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
-            android:orientation="horizontal" >
-
+            android:orientation="vertical" >
             <Button
-                android:layout_width="0dp"
+                android:id="@+id/login"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/em_button_register_bg"
-                android:gravity="center"
-                android:onClick="register"
-                android:paddingBottom="7dp"
-                android:paddingTop="7dp"
-                android:text="@string/register"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:layout_marginRight="10dip"
-                android:layout_weight="1"
-                android:background="@drawable/em_button_login_bg"
-                android:gravity="center"
+                android:background="@color/btn_green_noraml"
                 android:onClick="login"
+                android:layout_centerHorizontal="true"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
                 android:text="@string/login"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
-        </LinearLayout>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/em_button_register_bg"
+                android:layout_centerHorizontal="true"
+                android:onClick="register"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/register"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/login"
+                android:textSize="18sp"/>
+
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>
