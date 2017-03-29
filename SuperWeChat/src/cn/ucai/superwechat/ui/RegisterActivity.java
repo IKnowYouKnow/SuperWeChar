@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMError;
@@ -55,6 +56,8 @@ public class RegisterActivity extends BaseActivity {
     String username, nick, pwd;
     ProgressDialog pd;
     IUserModel mModel;
+    @BindView(R.id.tv_title)
+    TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,11 @@ public class RegisterActivity extends BaseActivity {
         setContentView(R.layout.em_activity_register);
         ButterKnife.bind(this);
         mModel = new UserModel();
+        initView();
+    }
+
+    private void initView() {
+        mTvTitle.setText("注册");
     }
 
     private void showDialog() {
