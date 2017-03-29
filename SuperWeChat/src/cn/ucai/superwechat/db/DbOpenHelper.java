@@ -112,5 +112,5 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 	        instance = null;
 	    }
 	}
-	
+
 }
