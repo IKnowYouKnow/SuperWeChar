@@ -69,7 +69,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <!--注册自定义Activity begin-->
+        <activity android:name=".ui.GuideActivity"/>
+        <!--注册自定义Activity end-->
         <!-- 登陆 -->
         <activity
             android:name="cn.ucai.superwechat.ui.LoginActivity"
