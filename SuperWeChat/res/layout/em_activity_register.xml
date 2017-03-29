@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dip"
-                android:text="用户名"
+                android:text="昵称"
                 android:textSize="18sp"/>
 
             <EditText
