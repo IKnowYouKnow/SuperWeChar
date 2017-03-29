@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 	
 	sourceSets {
@@ -46,5 +46,6 @@ dependencies {
     //release时需要把hyphenatechatsdk的依赖注释掉，sdk已经被打成jar包放在libs底下
     //compile project(':hyphenatechatsdk')
     compile fileTree(include: '*.jar', dir: 'libs')
-    compile 'com.android.support:support-v4:23.0.1'
+    //    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v4:25.1.1'
 }
