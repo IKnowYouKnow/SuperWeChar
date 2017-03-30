@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -64,12 +65,13 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener,DMTabHost.OnCheckedChangeListener{
 
     protected static final String TAG = "MainActivity";
     @BindView(R.id.tv_title)
@@ -147,6 +149,9 @@ public class MainActivity extends BaseActivity {
         mAdapter.addFragment(new DicoverFragment(),getString(R.string.discover));
         mAdapter.addFragment(settingFragment,getString(R.string.me));
         mLayoutViewpage.setAdapter(mAdapter);
+        mLayoutViewpage.setOnPageChangeListener(this);
+        mLayoutTabhost.setOnCheckedChangeListener(this);
+        mLayoutTabhost.setChecked(0);
     }
 
     private void umengInit() {
@@ -347,6 +352,30 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.iv_back)
     public void backArea() {
         MFGT.finish(MainActivity.this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        L.e("main","onPageScrolled,position="+position+",positionOffset="+positionOffset+
+                ",positionOffsetPixels="+positionOffsetPixels);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        L.e("main","onPageSelected,position="+position);
+        mLayoutTabhost.setChecked(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onCheckedChange(int checkedPosition, boolean byUser) {
+        L.e("main","onCheckedChange,checkedPosition="+checkedPosition+",byUser="+byUser);
+        mLayoutViewpage.setCurrentItem(checkedPosition);
+
     }
 
     public class MyContactListener implements EMContactListener {
