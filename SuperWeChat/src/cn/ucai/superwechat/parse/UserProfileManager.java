@@ -124,6 +124,7 @@ public class UserProfileManager {
     public synchronized void reset() {
         isSyncingContactInfosWithServer = false;
         currentUser = null;
+        currentAppUser = null;
         PreferenceManager.getInstance().removeCurrentUserInfo();
     }
 
@@ -138,6 +139,16 @@ public class UserProfileManager {
         return currentUser;
     }
 
+    public synchronized User getCurrentAppUser(){
+        if (currentAppUser == null){
+            String username = EMClient.getInstance().getCurrentUser();
+            currentAppUser = new User(username);
+            String nick = getCurrentUserNick();
+            currentAppUser.setMUserNick((nick!=null)?nick:username);
+            currentAppUser.setAvatar(getCurrentUserAvatar());
+        }
+        return currentAppUser;
+    }
     public boolean updateCurrentUserNickName(final String nickname) {
         boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
         if (isSuccess) {
@@ -159,9 +170,14 @@ public class UserProfileManager {
             @Override
             public void onSuccess(String s) {
                 if (s != null) {
-                    Result result = ResultUtils.getResultFromJson(s, String.class);
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
                     if (result != null && result.isRetMsg()) {
                         Log.e(TAG, "onSuccess: result="+result);
+                        currentAppUser = (User) result.getRetData();
+                        if (result!=null){
+                            setCurrentAppUserNick(currentAppUser.getMUserNick());
+                            setCurrentUserAvatar(currentAppUser.getAvatar());
+                        }
                     }
                 }
             }
@@ -196,6 +212,14 @@ public class UserProfileManager {
         ParseManager.getInstance().asyncGetUserInfo(username, callback);
     }
 
+    private void setCurrentAppUserNick(String nick){
+        getCurrentAppUser().setMUserNick(nick);
+        PreferenceManager.getInstance().setCurrentUserNick(nick);
+    }
+    private void setCurrentAppUserAvatar(String avatar){
+        getCurrentAppUser().setAvatar(avatar);
+        PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+    }
     private void setCurrentUserNick(String nickname) {
         getCurrentUserInfo().setNick(nickname);
         PreferenceManager.getInstance().setCurrentUserNick(nickname);
