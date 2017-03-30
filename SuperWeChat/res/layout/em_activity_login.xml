@@ -120,7 +120,8 @@
             android:id="@+id/btn_register"
             android:layout_width="80dp"
             android:layout_height="40dp"
-            android:background="@drawable/icon_btn_register"
+            android:background="#fff"
+            android:text="注册"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"/>
