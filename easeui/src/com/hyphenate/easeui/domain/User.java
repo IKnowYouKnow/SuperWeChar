@@ -140,4 +140,14 @@ public class User implements Serializable {
 		String path = "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
 		return path;
 	}
+
+	public void cloneByOther(User user) {
+		this.muserName = user.getMUserName();
+		this.muserNick = user.getMUserNick();
+		this.mavatarId = user.mavatarId;
+		this.mavatarPath = user.getMAvatarPath();
+		this.mavatarSuffix = user.mavatarSuffix;
+		this.mavatarType = user.mavatarType;
+		this.mavatarLastUpdateTime = user.mavatarLastUpdateTime;
+	}
 }
