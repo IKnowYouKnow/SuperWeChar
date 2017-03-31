@@ -34,6 +34,7 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +72,7 @@ import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener,DMTabHost.OnCheckedChangeListener{
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
 
     protected static final String TAG = "MainActivity";
     @BindView(R.id.tv_title)
@@ -80,6 +81,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     MFViewPager mLayoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
+    @BindView(R.id.iv_back)
+    ImageView mIvBack;
     // textview for unread message count
 //    private TextView unreadLabel;
 //    // textview for unread event message
@@ -95,6 +98,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     // user account was removed
     private boolean isCurrentAccountRemoved = false;
     MainTabAdpter mAdapter;
+    ProfileFragment profileFragment;
 
 
     /**
@@ -137,17 +141,17 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private void initFragment() {
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        profileFragment = new ProfileFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, profileFragment};
 
 //		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
 //				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
 //				.commit();
         mAdapter = new MainTabAdpter(getSupportFragmentManager());
-        mAdapter.addFragment(conversationListFragment,getString(R.string.app_name));
-        mAdapter.addFragment(contactListFragment,getString(R.string.contacts));
-        mAdapter.addFragment(new DicoverFragment(),getString(R.string.discover));
-        mAdapter.addFragment(settingFragment,getString(R.string.me));
+        mAdapter.addFragment(conversationListFragment, getString(R.string.app_name));
+        mAdapter.addFragment(contactListFragment, getString(R.string.contacts));
+        mAdapter.addFragment(new DicoverFragment(), getString(R.string.discover));
+        mAdapter.addFragment(profileFragment, getString(R.string.me));
         mLayoutViewpage.setAdapter(mAdapter);
         mLayoutViewpage.setOnPageChangeListener(this);
         mLayoutTabhost.setOnCheckedChangeListener(this);
@@ -216,7 +220,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //		mTabs[2] = (Button) findViewById(R.id.btn_setting);
 //		// select first tab
 //		mTabs[0].setSelected(true);
-        mTvTitle.setText("消息");
+        mTvTitle.setText("微信");
+        mIvBack.setVisibility(View.GONE);
 
     }
 
@@ -356,13 +361,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        L.e("main","onPageScrolled,position="+position+",positionOffset="+positionOffset+
-                ",positionOffsetPixels="+positionOffsetPixels);
+        L.e("main", "onPageScrolled,position=" + position + ",positionOffset=" + positionOffset +
+                ",positionOffsetPixels=" + positionOffsetPixels);
     }
 
     @Override
     public void onPageSelected(int position) {
-        L.e("main","onPageSelected,position="+position);
+        L.e("main", "onPageSelected,position=" + position);
         mLayoutTabhost.setChecked(position);
     }
 
@@ -373,7 +378,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
-        L.e("main","onCheckedChange,checkedPosition="+checkedPosition+",byUser="+byUser);
+//        L.e("main","onCheckedChange,checkedPosition="+checkedPosition+",byUser="+byUser);
         mLayoutViewpage.setCurrentItem(checkedPosition);
 
     }
