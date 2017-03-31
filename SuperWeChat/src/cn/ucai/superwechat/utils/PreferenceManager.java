@@ -16,6 +16,7 @@ package cn.ucai.superwechat.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class PreferenceManager {
 	/**
@@ -205,6 +206,7 @@ public class PreferenceManager {
 	}
 
 	public String getCurrentUserNick() {
+		Log.e("manager","mSharedPreferences.getString(SHARED_KEY_CURRENTUSER_NICK, null);="+mSharedPreferences.getString(SHARED_KEY_CURRENTUSER_NICK, null));
 		return mSharedPreferences.getString(SHARED_KEY_CURRENTUSER_NICK, null);
 	}
 

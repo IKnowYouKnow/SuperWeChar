@@ -24,12 +24,15 @@ import com.bumptech.glide.Glide;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.io.ByteArrayOutputStream;
 
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
 	
@@ -63,8 +66,13 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	}
 	
 	private void initListener() {
+		EaseUser easeUser = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentUserInfo();
+		User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUser();
+		L.e("easeUser:"+ easeUser.toString());
+		L.e("user:"+ user.toString());
 		Intent intent = getIntent();
 		String username = intent.getStringExtra("username");
+		username = easeUser.toString();
 		boolean enableUpdate = intent.getBooleanExtra("setting", false);
 		if (enableUpdate) {
 			headPhotoUpdate.setVisibility(View.VISIBLE);
@@ -76,7 +84,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			iconRightArrow.setVisibility(View.INVISIBLE);
 		}
 		if(username != null){
-    		if (username.equals(EMClient.getInstance().getCurrentUser())) {
+            L.e(easeUser.toString());
+    		if (username.equals(easeUser.getUsername())) {
     			tvUsername.setText(EMClient.getInstance().getCurrentUser());
     			EaseUserUtils.setAppUserNick(username, tvNickName);
                 EaseUserUtils.setAppUserAvatar(this, username, headAvatar);
@@ -138,6 +147,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 			
 			@Override
 			public void onError(int error, String errorMsg) {
+				CommonUtils.showLongToast(errorMsg);
 			}
 		});
 	}

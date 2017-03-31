@@ -6,9 +6,11 @@
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/settingBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleBarTitle="@string/set"
+        app:titleBarLeftImage="@drawable/em_mm_title_back"
         />
 
     <ScrollView

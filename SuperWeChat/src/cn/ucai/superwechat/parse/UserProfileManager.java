@@ -140,8 +140,10 @@ public class UserProfileManager {
     }
 
     public synchronized User getCurrentAppUser(){
-        if (currentAppUser == null){
+        Log.e(TAG, "getCurrentAppUser: currentAppUser++++++++" + currentAppUser );
+        if (currentAppUser == null || currentAppUser.getMUserName()==null){
             String username = EMClient.getInstance().getCurrentUser();
+            Log.e(TAG, "getCurrentAppUser: ++++++++" + username );
             currentAppUser = new User(username);
             String nick = getCurrentUserNick();
             currentAppUser.setMUserNick((nick!=null)?nick:username);
@@ -173,11 +175,12 @@ public class UserProfileManager {
                     Result result = ResultUtils.getResultFromJson(s, User.class);
                     if (result != null && result.isRetMsg()) {
                         Log.e(TAG, "onSuccess: result="+result);
-                        currentAppUser = (User) result.getRetData();
-                        if (result!=null){
-                            setCurrentAppUserNick(currentAppUser.getMUserNick());
-                            setCurrentUserAvatar(currentAppUser.getAvatar());
-                            SuperWeChatHelper.getInstance().saveAppContact(currentAppUser);
+                       User user = (User) result.getRetData();
+                        if (user != null){
+                            setCurrentAppUserNick(user.getMUserNick());
+                            setCurrentAppUserAvatar(user.getAvatar());
+                            currentAppUser.cloneByOther(user);
+                            SuperWeChatHelper.getInstance().saveAppContact(user);
                         }
                     }
                 }
@@ -214,12 +217,12 @@ public class UserProfileManager {
     }
 
     private void setCurrentAppUserNick(String nick){
-        getCurrentAppUser().setMUserNick(nick);
         PreferenceManager.getInstance().setCurrentUserNick(nick);
+        getCurrentAppUser().setMUserNick(nick);
     }
     private void setCurrentAppUserAvatar(String avatar){
-        getCurrentAppUser().setAvatar(avatar);
         PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+        getCurrentAppUser().setAvatar(avatar);
     }
     private void setCurrentUserNick(String nickname) {
         getCurrentUserInfo().setNick(nickname);
@@ -232,6 +235,7 @@ public class UserProfileManager {
     }
 
     private String getCurrentUserNick() {
+        Log.e(TAG, "getCurrentUserNick: ++++PreferenceManager.getInstance().getCurrentUserNick()++++" + PreferenceManager.getInstance().getCurrentUserNick() );
         return PreferenceManager.getInstance().getCurrentUserNick();
     }
 

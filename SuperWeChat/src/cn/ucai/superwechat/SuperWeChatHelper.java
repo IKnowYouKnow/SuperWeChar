@@ -834,21 +834,26 @@ public class SuperWeChatHelper {
         return user;
     }
     private User getAppUserInfo(String username){
+        Log.i("main", "getAppUserInfo,username=" + username);
         // To get instance of EaseUser, here we get it from the user list in memory
         // You'd better cache it if you get it from your server
         User user = null;
+        Log.i("main", "getAppUserInfo,EMClient.getInstance().getCurrentUser()=" + EMClient.getInstance().getCurrentUser());
+        Log.i("main", "getAppUserInfo,getUserProfileManager().getCurrentAppUser()=" + getUserProfileManager().getCurrentAppUser());
         if(username.equals(EMClient.getInstance().getCurrentUser()))
             return getUserProfileManager().getCurrentAppUser();
         user = getAppContactList().get(username);
 //        if(user == null && getRobotList() != null){
 //            user = getRobotList().get(username);
 //        }
+        Log.i("main", "getAppUserInfo,user=" + user);
 
         // if user is not in your contacts, set inital letter for him/her
         if(user == null){
             user = new User(username);
             EaseCommonUtils.setAppUserInitialLetter(user);
         }
+        Log.i("main", "getAppUserInfo,user=" + user);
         return user;
     }
 	
@@ -1027,8 +1032,8 @@ public class SuperWeChatHelper {
      */
     public void setAppContactList(Map<String, User> aContactList) {
         if(aContactList == null){
-            if (contactList != null) {
-                contactList.clear();
+            if (appContactList != null) {
+                appContactList.clear();
             }
             return;
         }
@@ -1039,7 +1044,7 @@ public class SuperWeChatHelper {
     /**
      * save single contact
      */
-    public void saveAppContact(User user){
+    public void  saveAppContact(User user){
         getAppContactList().put(user.getMUserName(), user);
         demoModel.saveAppContact(user);
     }
@@ -1418,6 +1423,7 @@ public class SuperWeChatHelper {
         
         setContactList(null);
         setRobotList(null);
+        setAppContactList(null);
         getUserProfileManager().reset();
         SuperWeChatDBManager.getInstance().closeDB();
     }
