@@ -8,6 +8,8 @@ import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
+import cn.ucai.superwechat.ui.SettingsActivity;
+import cn.ucai.superwechat.ui.UserProfileActivity;
 
 
 /**
@@ -50,5 +52,14 @@ public class MFGT {
 
     public static void gotoRegisterActivity(Activity activity) {
         startActivity(activity, RegisterActivity.class);
+    }
+
+    public static void gotoSettingActivity(Activity activity) {
+        startActivity(activity,SettingsActivity.class);
+    }
+
+    public static void gotoUserProfileActivity(Activity activity,boolean settings, String username) {
+        startActivity(activity,new Intent(activity, UserProfileActivity.class).putExtra("setting", settings)
+                .putExtra("username", username));
     }
 }

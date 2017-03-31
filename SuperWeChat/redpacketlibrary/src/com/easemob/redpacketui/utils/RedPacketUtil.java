@@ -27,6 +27,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseChatMessageList;
 import com.hyphenate.exceptions.HyphenateException;
@@ -456,7 +457,27 @@ public class RedPacketUtil {
         intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, getTokenData());
         context.startActivity(intent);
     }
-
+    /**
+     * 进入零钱页面
+     *
+     * @param context 上下文
+     */
+    public static void startAppChangeActivity(Context context) {
+        Intent intent = new Intent(context, RPChangeActivity.class);
+        String fromNickname = EMClient.getInstance().getCurrentUser();
+        String fromAvatarUrl = "none";
+        User easeUser = EaseUserUtils.getAppUserInfo(fromNickname);
+        if (easeUser != null) {
+            fromAvatarUrl = TextUtils.isEmpty(easeUser.getAvatar()) ? "none" : easeUser.getAvatar();
+            fromNickname = TextUtils.isEmpty(easeUser.getMUserNick()) ? easeUser.getMUserName() : easeUser.getMUserNick();
+        }
+        RedPacketInfo redPacketInfo = new RedPacketInfo();
+        redPacketInfo.fromNickName = fromNickname;
+        redPacketInfo.fromAvatarUrl = fromAvatarUrl;
+        intent.putExtra(RPConstant.EXTRA_RED_PACKET_INFO, redPacketInfo);
+        intent.putExtra(RPConstant.EXTRA_TOKEN_DATA, getTokenData());
+        context.startActivity(intent);
+    }
 
     /**
      * 使用cmd消息发送领到红包之后的回执消息

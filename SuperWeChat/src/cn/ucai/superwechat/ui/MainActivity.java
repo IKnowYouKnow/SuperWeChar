@@ -650,4 +650,5 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                                            @NonNull int[] grantResults) {
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
+
 }
