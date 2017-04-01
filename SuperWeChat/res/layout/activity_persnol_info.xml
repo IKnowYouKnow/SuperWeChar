@@ -4,6 +4,8 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <include layout="@layout/title_layout" android:id="@+id/title"/>
+
     <RelativeLayout
         android:id="@+id/layout_avatar"
         android:layout_width="match_parent"
@@ -20,15 +22,15 @@
 
         <ImageView
             android:id="@+id/ivAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/default_avatar"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_nick"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@color/white"
@@ -93,6 +95,7 @@
             android:background="@drawable/right"
             />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/layout_address"
         android:layout_width="match_parent"
@@ -128,10 +131,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textSize="18sp"
             android:text="未设置"
+            android:textSize="18sp"
             />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/layout_city"
         android:layout_width="match_parent"
@@ -151,10 +155,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textSize="18sp"
             android:text="未设置"
+            android:textSize="18sp"
             />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/layout_note"
         android:layout_width="match_parent"
@@ -174,8 +179,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textSize="18sp"
             android:text="未设置"
+            android:textSize="18sp"
             />
     </RelativeLayout>
 </LinearLayout>
