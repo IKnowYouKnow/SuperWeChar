@@ -234,7 +234,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 		ll_call_option.setOnClickListener(this);
 		rl_mail_log.setOnClickListener(this);
 
-		easeTitleBar.setOnClickListener(new OnClickListener() {
+		easeTitleBar.setLeftLayoutClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				MFGT.finish(SettingsActivity.this);
@@ -442,6 +442,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
 					public void run() {
 						pd.dismiss();
 						// show login screen
+						finish();
 						MFGT.gotoLoginActivity(SettingsActivity.this);
 					}
 				});
