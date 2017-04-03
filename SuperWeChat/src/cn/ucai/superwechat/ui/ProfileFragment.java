@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.redpacketui.utils.RedPacketUtil;
-import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import butterknife.BindView;
@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.MFGT;
 
 /**
@@ -32,6 +33,7 @@ public class ProfileFragment extends Fragment {
     TextView mTvNick;
     @BindView(R.id.tvUsername)
     TextView mTvUsername;
+    User user;
 
     @Nullable
     @Override
@@ -48,8 +50,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initData() {
-        String username = EMClient.getInstance().getCurrentUser();
-        Log.i("main", "ProfileFragment" + username);
+        user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUser();
+        String username = user.getMUserName();
+        Log.i("main", "ProfileFragment" + user.getMUserNick());
         mTvUsername.setText("微信号："+username);
         EaseUserUtils.setAppUserAvatar(getContext(),username,mIvAvatar);
         EaseUserUtils.setAppUserNick(username,mTvNick);
@@ -64,7 +67,7 @@ public class ProfileFragment extends Fragment {
     }
     @OnClick(R.id.avatar)
     public void showUserInfo(){
-        MFGT.gotoUserProfileActivity(getActivity(),true,EMClient.getInstance().getCurrentUser());
+        MFGT.gotoUserProfileActivity(getActivity());
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -74,5 +77,11 @@ public class ProfileFragment extends Fragment {
         }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
             outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 }

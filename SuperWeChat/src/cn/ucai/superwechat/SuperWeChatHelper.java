@@ -1045,6 +1045,7 @@ public class SuperWeChatHelper {
      * save single contact
      */
     public void  saveAppContact(User user){
+        Log.i("main", "SuperWeChatHelper,saveAppContact,user=" + user);
         getAppContactList().put(user.getMUserName(), user);
         demoModel.saveAppContact(user);
     }

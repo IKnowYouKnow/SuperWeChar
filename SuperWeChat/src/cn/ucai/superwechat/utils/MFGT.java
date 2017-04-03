@@ -59,8 +59,7 @@ public class MFGT {
         startActivity(activity,SettingsActivity.class);
     }
 
-    public static void gotoUserProfileActivity(Activity activity,boolean settings, String username) {
-        startActivity(activity,new Intent(activity, UserProfileActivity.class).putExtra("setting", settings)
-                .putExtra("username", username));
+    public static void gotoUserProfileActivity(Activity activity) {
+        startActivity(activity,UserProfileActivity.class);
     }
 }

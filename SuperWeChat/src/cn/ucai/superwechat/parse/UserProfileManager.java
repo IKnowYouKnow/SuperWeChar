@@ -1,6 +1,7 @@
 package cn.ucai.superwechat.parse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.hyphenate.EMValueCallBack;
@@ -11,8 +12,11 @@ import com.hyphenate.easeui.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.IUserModel;
 import cn.ucai.superwechat.utils.OnCompleteListener;
 import cn.ucai.superwechat.utils.PreferenceManager;
@@ -138,7 +142,6 @@ public class UserProfileManager {
         }
         return currentUser;
     }
-
     public synchronized User getCurrentAppUser(){
         Log.e(TAG, "getCurrentAppUser: currentAppUser++++++++" + currentAppUser );
         if (currentAppUser == null || currentAppUser.getMUserName()==null){
@@ -152,11 +155,39 @@ public class UserProfileManager {
         return currentAppUser;
     }
     public boolean updateCurrentUserNickName(final String nickname) {
-        boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
-        if (isSuccess) {
-            setCurrentUserNick(nickname);
-        }
-        return isSuccess;
+        Log.i("main", "updateCurrentUserNickName,nickname=" + nickname);
+        mModel.updateNick(appContext,EMClient.getInstance().getCurrentUser(), nickname, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                boolean success = false;
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result != null && result.getRetData() != null) {
+                        User user = (User) result.getRetData();
+                        if (user != null) {
+                            success = true;
+                            SuperWeChatHelper.getInstance().getUserProfileManager().setCurrentAppUserNick(user.getMUserNick());
+                            setCurrentUserNick(user.getMUserNick());
+                            Log.i("main", "updateCurrentUserNickName,user=" + user);
+
+                        }
+
+                    } else {
+                        CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                    }
+                }
+                appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK)
+                        .putExtra(I.User.USER_NAME,success));
+            }
+
+            @Override
+            public void onError(String error) {
+                CommonUtils.showShortToast(R.string.toast_updatenick_fail);
+                appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK)
+                        .putExtra(I.User.USER_NAME,false));
+            }
+        });
+        return false;
     }
 
     public String uploadUserAvatar(byte[] data) {
