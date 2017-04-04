@@ -9,6 +9,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,21 +143,23 @@ public class UserProfileManager {
         }
         return currentUser;
     }
-    public synchronized User getCurrentAppUser(){
-        Log.e(TAG, "getCurrentAppUser: currentAppUser++++++++" + currentAppUser );
-        if (currentAppUser == null || currentAppUser.getMUserName()==null){
+
+    public synchronized User getCurrentAppUser() {
+        Log.e(TAG, "getCurrentAppUser: currentAppUser++++++++" + currentAppUser);
+        if (currentAppUser == null || currentAppUser.getMUserName() == null) {
             String username = EMClient.getInstance().getCurrentUser();
-            Log.e(TAG, "getCurrentAppUser: ++++++++" + username );
+            Log.e(TAG, "getCurrentAppUser: ++++++++" + username);
             currentAppUser = new User(username);
             String nick = getCurrentUserNick();
-            currentAppUser.setMUserNick((nick!=null)?nick:username);
+            currentAppUser.setMUserNick((nick != null) ? nick : username);
             currentAppUser.setAvatar(getCurrentUserAvatar());
         }
         return currentAppUser;
     }
+
     public boolean updateCurrentUserNickName(final String nickname) {
         Log.i("main", "updateCurrentUserNickName,nickname=" + nickname);
-        mModel.updateNick(appContext,EMClient.getInstance().getCurrentUser(), nickname, new OnCompleteListener<String>() {
+        mModel.updateNick(appContext, EMClient.getInstance().getCurrentUser(), nickname, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
                 boolean success = false;
@@ -177,25 +180,53 @@ public class UserProfileManager {
                     }
                 }
                 appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK)
-                        .putExtra(I.User.USER_NAME,success));
+                        .putExtra(I.User.USER_NAME, success));
             }
 
             @Override
             public void onError(String error) {
                 CommonUtils.showShortToast(R.string.toast_updatenick_fail);
                 appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK)
-                        .putExtra(I.User.USER_NAME,false));
+                        .putExtra(I.User.USER_NAME, false));
             }
         });
         return false;
     }
 
-    public String uploadUserAvatar(byte[] data) {
-        String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
-        if (avatarUrl != null) {
-            setCurrentUserAvatar(avatarUrl);
-        }
-        return avatarUrl;
+    public void uploadUserAvatar(File file) {
+        mModel.updateAvatar(appContext, EMClient.getInstance().getCurrentUser(), file,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean success = false;
+
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null && result.isRetMsg()) {
+                                User user = (User) result.getRetData();
+                                if (user != null) {
+                                    success = true;
+                                    setCurrentAppUserAvatar(user.getAvatar());
+                                    SuperWeChatHelper.getInstance().getUserProfileManager()
+                                            .setCurrentAppUserAvatar(user.getAvatar());
+                                }
+                            }
+                        }
+                        appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+                                .putExtra(I.Avatar.UPDATE_TIME, success));
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+                                .putExtra(I.Avatar.UPDATE_TIME, false));
+                    }
+                });
+//        String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
+//        if (avatarUrl != null) {
+//            setCurrentUserAvatar(avatarUrl);
+//        }
+//        return avatarUrl;
     }
 
     public void asyncGetCurrentAppUserInfo() {
@@ -205,9 +236,9 @@ public class UserProfileManager {
                 if (s != null) {
                     Result result = ResultUtils.getResultFromJson(s, User.class);
                     if (result != null && result.isRetMsg()) {
-                        Log.e(TAG, "onSuccess: result="+result);
-                       User user = (User) result.getRetData();
-                        if (user != null){
+                        Log.e(TAG, "onSuccess: result=" + result);
+                        User user = (User) result.getRetData();
+                        if (user != null) {
                             setCurrentAppUserNick(user.getMUserNick());
                             setCurrentAppUserAvatar(user.getAvatar());
                             currentAppUser.cloneByOther(user);
@@ -247,14 +278,16 @@ public class UserProfileManager {
         ParseManager.getInstance().asyncGetUserInfo(username, callback);
     }
 
-    private void setCurrentAppUserNick(String nick){
+    private void setCurrentAppUserNick(String nick) {
         PreferenceManager.getInstance().setCurrentUserNick(nick);
         getCurrentAppUser().setMUserNick(nick);
     }
-    private void setCurrentAppUserAvatar(String avatar){
+
+    private void setCurrentAppUserAvatar(String avatar) {
         PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
         getCurrentAppUser().setAvatar(avatar);
     }
+
     private void setCurrentUserNick(String nickname) {
         getCurrentUserInfo().setNick(nickname);
         PreferenceManager.getInstance().setCurrentUserNick(nickname);
@@ -266,7 +299,7 @@ public class UserProfileManager {
     }
 
     private String getCurrentUserNick() {
-        Log.e(TAG, "getCurrentUserNick: ++++PreferenceManager.getInstance().getCurrentUserNick()++++" + PreferenceManager.getInstance().getCurrentUserNick() );
+        Log.e(TAG, "getCurrentUserNick: ++++PreferenceManager.getInstance().getCurrentUserNick()++++" + PreferenceManager.getInstance().getCurrentUserNick());
         return PreferenceManager.getInstance().getCurrentUserNick();
     }
 

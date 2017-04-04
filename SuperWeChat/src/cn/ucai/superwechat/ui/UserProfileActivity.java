@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +28,11 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +61,9 @@ public class UserProfileActivity extends BaseActivity {
     IUserModel mModel;
     String username;
     UpdateUserNickReceiver mReceiver;
+    UpdateUserAvatarReceiver mAvatarReceiver;
     User user;
+    String avatarName;
 
 
     @Override
@@ -73,6 +80,10 @@ public class UserProfileActivity extends BaseActivity {
         mReceiver = new UpdateUserNickReceiver();
         IntentFilter filter = new IntentFilter(I.REQUEST_UPDATE_USER_NICK);
         registerReceiver(mReceiver, filter);
+
+        mAvatarReceiver = new UpdateUserAvatarReceiver();
+        IntentFilter intentFilter = new IntentFilter(I.REQUEST_UPDATE_AVATAR);
+        registerReceiver(mAvatarReceiver, intentFilter);
     }
 
     private void initData() {
@@ -191,44 +202,47 @@ public class UserProfileActivity extends BaseActivity {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             mIvAvatar.setImageDrawable(drawable);
-            uploadUserAvatar(Bitmap2Bytes(photo));
+            uploadAppUserAvatar(saveBitmapFile(photo));
         }
 
     }
 
-    private void uploadUserAvatar(final byte[] data) {
+    private void uploadAppUserAvatar(File file) {
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                final String avatarUrl = SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        if (avatarUrl != null) {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_fail),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-
-            }
-        }).start();
-
+        SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(file);
         dialog.show();
     }
 
+    public static String getAvatarPath(Context context, String path) {
+        File dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File folder = new File(dir, path);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder.getAbsolutePath();
+    }
 
-    public byte[] Bitmap2Bytes(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
+    private String getAvatarName(){
+        avatarName = user.getMUserName()+System.currentTimeMillis();
+        return avatarName;
+    }
+
+    private File saveBitmapFile(Bitmap bitmap) {
+        if (bitmap != null) {
+            String imagePath = getAvatarPath(UserProfileActivity.this, I.AVATAR_TYPE) + "/" + getAvatarName() + ".jpg";
+            File file = new File(imagePath);
+                try {
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                    bos.flush();
+                    bos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+            } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return null;
     }
 
     @OnClick(R.id.iv_back)
@@ -322,6 +336,9 @@ public class UserProfileActivity extends BaseActivity {
         super.onDestroy();
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
+        }
+        if (mAvatarReceiver != null) {
+            unregisterReceiver(mAvatarReceiver);
         }
     }
 }
