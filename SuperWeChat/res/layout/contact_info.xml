@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#f1f1f1"
+    >
+<com.hyphenate.easeui.widget.EaseTitleBar
+    android:id="@+id/titleBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:titleBarLeftImage="@drawable/icon_back"
+    app:titleBarTitle="@string/add_friend"/>
+
+    <RelativeLayout
+        android:id="@+id/avatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/ivAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/default_avatar"
+            />
+
+        <TextView
+            android:id="@+id/tvContactNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@id/ivAvatar"
+            android:text="昵称"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvContactUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvContactNick"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/ivAvatar"
+            android:text="用户名"
+            android:textColor="@color/black"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/setting_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:text="@string/userinfo_txt_note_mark"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        />
+
+    <Button
+        android:id="@+id/send_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/green"
+        android:text="@string/userinfo_btn_send_msg"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/green"
+        android:text="@string/userinfo_btn_add_contact"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/chat_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/white"
+        android:text="@string/userinfo_btn_send_video"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:visibility="gone"
+        />
+</LinearLayout>

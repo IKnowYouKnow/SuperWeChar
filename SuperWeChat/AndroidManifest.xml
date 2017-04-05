@@ -71,6 +71,7 @@
         </activity>
         <!--注册自定义Activity begin-->
         <activity android:name=".ui.GuideActivity"/>
+        <activity android:name=".ui.ContactActivity"/>
         <activity
             android:name="cn.ucai.superwechat.ui.SettingsActivity"/>
         <!--注册自定义Activity end-->
