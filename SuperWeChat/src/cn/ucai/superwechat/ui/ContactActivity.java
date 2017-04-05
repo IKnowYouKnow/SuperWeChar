@@ -77,6 +77,11 @@ public class ContactActivity extends BaseActivity {
     }
     @OnClick(R.id.add_friend)
     public void addFriend(){
-        MFGT.gotoFriendProfile(ContactActivity.this,user.getMUserNick());
+        boolean isConfirm = true;
+        if (isConfirm) {
+            MFGT.gotoFriendProfile(ContactActivity.this, user.getMUserNick());
+        }else {
+            // 直接添加，给好友发送消息
+        }
     }
 }
