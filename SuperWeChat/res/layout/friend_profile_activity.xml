@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+<com.hyphenate.easeui.widget.EaseTitleBar
+    android:id="@+id/title_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:titleBarLeftImage="@drawable/icon_back"
+    app:titleBarTitle="验证申请"
+    android:background="#f0f0f0">
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/btn_green_pressed"
+        android:textSize="18sp"
+        android:text="@string/button_send"
+        android:layout_alignParentRight="true"/>
+</com.hyphenate.easeui.widget.EaseTitleBar>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/addcontact_send_msg_title"/>
+
+    <EditText
+        android:id="@+id/my_nick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        />
+</LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/userinfo_txt_note_mark"/>
+
+        <EditText
+            android:id="@+id/friend_nick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+</LinearLayout>
