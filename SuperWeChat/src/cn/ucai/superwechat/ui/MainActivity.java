@@ -34,8 +34,6 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
@@ -49,7 +47,9 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.util.EMLog;
+import com.hyphenate.util.NetUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -57,7 +57,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
@@ -70,19 +69,19 @@ import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
+import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
+import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
 
     protected static final String TAG = "MainActivity";
-    @BindView(R.id.tv_title)
-    TextView mTvTitle;
     @BindView(R.id.layout_viewpage)
     MFViewPager mLayoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
-    @BindView(R.id.iv_back)
-    ImageView mIvBack;
+    @BindView(R.id.layout_title)
+    EaseTitleBar mLayoutTitle;
     // textview for unread message count
 //    private TextView unreadLabel;
 //    // textview for unread event message
@@ -99,6 +98,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private boolean isCurrentAccountRemoved = false;
     MainTabAdpter mAdapter;
     ProfileFragment profileFragment;
+    TitlePopup popup;
 
 
     /**
@@ -220,10 +220,33 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //		mTabs[2] = (Button) findViewById(R.id.btn_setting);
 //		// select first tab
 //		mTabs[0].setSelected(true);
-        mTvTitle.setText("微信");
-        mIvBack.setVisibility(View.GONE);
-
+//        mTvTitle.setText("微信");
+//        mIvBack.setVisibility(View.GONE);
+        mLayoutTitle.setRightLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetUtils.hasDataConnection(MainActivity.this)) {
+                    // 进入添加好友页
+                    popup.show(mLayoutTitle);
+                }
+            }
+        });
+        popup = new TitlePopup(MainActivity.this);
+        popup.addAction(new ActionItem(MainActivity.this, R.string.menu_groupchat, R.drawable.icon_menu_group));
+        popup.addAction(new ActionItem(MainActivity.this, R.string.menu_addfriend, R.drawable.icon_menu_addfriend));
+        popup.addAction(new ActionItem(MainActivity.this, R.string.menu_qrcode, R.drawable.icon_menu_sao));
+        popup.addAction(new ActionItem(MainActivity.this, R.string.menu_money, R.drawable.icon_menu_money));
+        popup.setItemOnClickListener(showItemListener);
     }
+
+    TitlePopup.OnItemOnClickListener showItemListener = new TitlePopup.OnItemOnClickListener() {
+        @Override
+        public void onItemClick(ActionItem item, int position) {
+            if (position == 1) {
+                MFGT.gotoAddContactActivity(MainActivity.this);
+            }
+        }
+    };
 
     /**
      * on tab clicked
@@ -352,11 +375,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         };
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
-    }
-
-    @OnClick(R.id.iv_back)
-    public void backArea() {
-        MFGT.finish(MainActivity.this);
     }
 
     @Override
