@@ -747,7 +747,14 @@ public class SuperWeChatHelper {
                                 Result result = ResultUtils.getResultFromJson(s, User.class);
                                 if (result != null && result.isRetMsg()) {
                                     User user = (User) result.getRetData();
-
+                                    if (user != null) {
+                                        Map<String, User> appContactList = getAppContactList();
+                                        if (!appContactList.containsKey(username)) {
+                                            userDao.saveAppContact(user);
+                                        }
+                                        appContactList.put(user.getMUserName(), user);
+                                        broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                                    }
                                 }
                             }
                         }

@@ -64,8 +64,16 @@ public class ContactActivity extends BaseActivity {
 
     private void initData() {
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
-        Log.i("main", "ContactActivity,user=" + user);
-        msg = (InviteMessage)getIntent().getSerializableExtra(I.User.NICK);
+        if (user != null) {
+
+        }else {
+            user = new User();
+            msg = (InviteMessage)getIntent().getSerializableExtra(I.User.NICK);
+            user.setMUserName(msg.getFrom());
+            user.setMUserNick(msg.getNick());
+            user.setAvatar(msg.getUserAvatar());
+        }
+
         mTitleBar.setLeftLayoutClickListener(listener);
     }
 

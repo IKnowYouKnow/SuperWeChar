@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +63,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			holder.status = (Button) convertView.findViewById(R.id.user_state);
 			holder.groupContainer = (LinearLayout) convertView.findViewById(R.id.ll_group);
 			holder.groupname = (TextView) convertView.findViewById(R.id.tv_groupName);
-			holder.layoutItem = (RelativeLayout) convertView.findViewById(R.id.layout_item);
+			holder.layoutItem = (LinearLayout) convertView.findViewById(R.id.layout_item);
 			// holder.time = (TextView) convertView.findViewById(R.id.time);
 
 			convertView.setTag(holder);
@@ -301,7 +300,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		Button status;
 		LinearLayout groupContainer;
 		TextView groupname;
-		RelativeLayout layoutItem;
+		LinearLayout layoutItem;
 		// TextView time;
 	}
 
