@@ -267,6 +267,8 @@ public class SuperWeChatDBManager {
             values.put(InviteMessgeDao.COLUMN_NAME_FROM, message.getFrom());
             values.put(InviteMessgeDao.COLUMN_NAME_GROUP_ID, message.getGroupId());
             values.put(InviteMessgeDao.COLUMN_NAME_GROUP_Name, message.getGroupName());
+            values.put(InviteMessgeDao.COLUMN_USER_NICK,message.getNick());
+            values.put(InviteMessgeDao.COLUMN_USER_AVATAR,message.getUserAvatar());
             values.put(InviteMessgeDao.COLUMN_NAME_REASON, message.getReason());
             values.put(InviteMessgeDao.COLUMN_NAME_TIME, message.getTime());
             values.put(InviteMessgeDao.COLUMN_NAME_STATUS, message.getStatus().ordinal());
@@ -303,7 +305,8 @@ public class SuperWeChatDBManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<InviteMessage> msgs = new ArrayList<InviteMessage>();
         if(db.isOpen()){
-            Cursor cursor = db.rawQuery("select * from " + InviteMessgeDao.TABLE_NAME + " desc",null);
+            Cursor cursor = db.rawQuery("select * from " + InviteMessgeDao.TABLE_NAME + " order by "
+                    +InviteMessgeDao.COLUMN_NAME_TIME+" desc",null);
             while(cursor.moveToNext()){
                 InviteMessage msg = new InviteMessage();
                 int id = cursor.getInt(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_ID));
@@ -311,6 +314,8 @@ public class SuperWeChatDBManager {
                 String groupid = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_ID));
                 String groupname = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_Name));
                 String reason = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_REASON));
+                String nick = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_USER_NICK));
+                String userAvatar = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_USER_AVATAR));
                 long time = cursor.getLong(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_TIME));
                 int status = cursor.getInt(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_STATUS));
                 String groupInviter = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUPINVITER));
@@ -319,6 +324,8 @@ public class SuperWeChatDBManager {
                 msg.setFrom(from);
                 msg.setGroupId(groupid);
                 msg.setGroupName(groupname);
+                msg.setNick(nick);
+                msg.setUserAvatar(userAvatar);
                 msg.setReason(reason);
                 msg.setTime(time);
                 msg.setGroupInviter(groupInviter);

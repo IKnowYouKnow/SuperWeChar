@@ -63,7 +63,12 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.IUserModel;
+import cn.ucai.superwechat.utils.OnCompleteListener;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
+import cn.ucai.superwechat.utils.UserModel;
 
 public class SuperWeChatHelper {
     /**
@@ -128,6 +133,7 @@ public class SuperWeChatHelper {
 
     private InviteMessgeDao inviteMessgeDao;
     private UserDao userDao;
+    private IUserModel mModel;
 
     private LocalBroadcastManager broadcastManager;
 
@@ -151,7 +157,8 @@ public class SuperWeChatHelper {
 	 */
 	public void init(Context context) {
 	    demoModel = new SuperWeChatModel(context);
-	    EMOptions options = initChatOptions();
+        mModel = new UserModel();
+        EMOptions options = initChatOptions();
 	    //use default options if options is null
 		if (EaseUI.getInstance().init(context, options)) {
 		    appContext = context;
@@ -728,7 +735,28 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
+            addContact();
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+        }
+        private void addContact() {
+            mModel.addContact(appContext, SuperWeChatHelper.getInstance().getCurrentUsernName(), username,
+                    new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            if (s != null) {
+                                Result result = ResultUtils.getResultFromJson(s, User.class);
+                                if (result != null && result.isRetMsg()) {
+                                    User user = (User) result.getRetData();
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                        }
+                    });
         }
 
         @Override
@@ -788,7 +816,8 @@ public class SuperWeChatHelper {
             Log.d(username, username + " refused to your request");
         }
     }
-    
+
+
     /**
      * save and notify invitation message
      * @param msg
@@ -797,11 +826,37 @@ public class SuperWeChatHelper {
         if(inviteMessgeDao == null){
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
-        inviteMessgeDao.saveMessage(msg);
+        syncUserInfo(msg);
+
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
         getNotifier().vibrateAndPlayTone(null);
+    }
+
+    private void syncUserInfo(final InviteMessage msg) {
+
+        mModel.loadUserInfo(appContext, msg.getFrom(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, User.class);
+                    if (result != null && result.isRetMsg()) {
+                        User user = (User) result.getRetData();
+                        if (user != null) {
+                            msg.setNick(user.getMUserNick());
+                            msg.setUserAvatar(user.getAvatar());
+                        }
+                    }
+                }
+                inviteMessgeDao.saveMessage(msg);
+            }
+
+            @Override
+            public void onError(String error) {
+                inviteMessgeDao.saveMessage(msg);
+            }
+        });
     }
 
     /**

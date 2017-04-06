@@ -13,14 +13,6 @@
  */
 package cn.ucai.superwechat.adapter;
 
-import java.util.List;
-
-import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -33,8 +25,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+
+import java.util.List;
+
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.InviteMessage.InviteMesageStatus;
+import cn.ucai.superwechat.utils.MFGT;
 
 public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
@@ -60,7 +64,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			holder.status = (Button) convertView.findViewById(R.id.user_state);
 			holder.groupContainer = (LinearLayout) convertView.findViewById(R.id.ll_group);
 			holder.groupname = (TextView) convertView.findViewById(R.id.tv_groupName);
+			holder.layoutItem = (RelativeLayout) convertView.findViewById(R.id.layout_item);
 			// holder.time = (TextView) convertView.findViewById(R.id.time);
+
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -93,6 +99,14 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			
 			holder.reason.setText(msg.getReason());
 			holder.name.setText(msg.getFrom());
+			holder.name.setText(msg.getNick());
+			EaseUserUtils.setUserAvatarPath(context,msg.getUserAvatar(),holder.avator);
+			holder.layoutItem.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					MFGT.gotoContact(getContext(),msg);
+				}
+			});
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMesageStatus.BEAGREED) {
@@ -166,8 +180,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
 	 * accept invitation
 	 * 
-	 * @param button
-	 * @param username
+	 * @param buttonAgree
+	 * @param buttonRefuse
 	 */
 	private void acceptInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
 		final ProgressDialog pd = new ProgressDialog(context);
@@ -224,8 +238,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 	/**
      * decline invitation
      * 
-     * @param button
-     * @param username
+     * @param buttonAgree
+     * @param msg
      */
     private void refuseInvitation(final Button buttonAgree, final Button buttonRefuse, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
@@ -287,6 +301,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		Button status;
 		LinearLayout groupContainer;
 		TextView groupname;
+		RelativeLayout layoutItem;
 		// TextView time;
 	}
 

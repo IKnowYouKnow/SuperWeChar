@@ -1,5 +1,6 @@
 package cn.ucai.superwechat.ui;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,14 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.utils.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
+import cn.ucai.superwechat.utils.UserModel;
 
 /**
  * Created by Administrator on 2017/4/5 0005.
@@ -39,17 +47,28 @@ public class ContactActivity extends BaseActivity {
     Button mChatVideo;
     @BindView(R.id.titleBar)
     EaseTitleBar mTitleBar;
+    InviteMessage msg;
+    IUserModel mModel;
+    boolean isFriend = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_info);
         ButterKnife.bind(this);
+        mModel = new UserModel();
+        initData();
+        initView();
+    }
+
+    private void initData() {
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
         Log.i("main", "ContactActivity,user=" + user);
-        initView();
+        msg = (InviteMessage)getIntent().getSerializableExtra(I.User.NICK);
         mTitleBar.setLeftLayoutClickListener(listener);
     }
+
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -58,8 +77,8 @@ public class ContactActivity extends BaseActivity {
     };
 
     private void initView() {
-        boolean isFriend = SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName());
-        Log.i("main","ContactActivity,isFriend="+isFriend);
+        isFriend = SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName());
+        Log.i("main", "ContactActivity,isFriend=" + isFriend);
         if (isFriend) {
             SuperWeChatHelper.getInstance().saveAppContact(user);
         }
@@ -68,6 +87,7 @@ public class ContactActivity extends BaseActivity {
         EaseUserUtils.setAppUserNick(user, mTvNick);
 
         showButton(isFriend);
+        syncUserInfo();
     }
 
     private void showButton(boolean isFriend) {
@@ -75,13 +95,45 @@ public class ContactActivity extends BaseActivity {
         mChatVideo.setVisibility(isFriend ? View.VISIBLE : View.GONE);
         mAddFriend.setVisibility(isFriend ? View.GONE : View.VISIBLE);
     }
+
     @OnClick(R.id.add_friend)
-    public void addFriend(){
+    public void addFriend() {
         boolean isConfirm = true;
         if (isConfirm) {
             MFGT.gotoFriendProfile(ContactActivity.this, user.getMUserNick());
-        }else {
+        } else {
             // 直接添加，给好友发送消息
         }
+    }
+
+    private void syncUserInfo() {
+        mModel.loadUserInfo(ContactActivity.this, user.getMUserName(),
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null && result.isRetMsg()) {
+                                User u = (User) result.getRetData();
+                                if (u != null) {
+                                    if (msg != null) {
+                                        ContentValues values = new ContentValues();
+                                        values.put(InviteMessgeDao.COLUMN_USER_NICK, u.getMUserNick());
+                                        values.put(InviteMessgeDao.COLUMN_USER_AVATAR, u.getAvatar());
+                                        InviteMessgeDao dao = new InviteMessgeDao(ContactActivity.this);
+                                        dao.updateMessage(msg.getId(), values);
+                                    } else if (isFriend) {
+                                        SuperWeChatHelper.getInstance().saveAppContact(u);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                });
     }
 }

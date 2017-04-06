@@ -99,7 +99,7 @@ public class EaseUserUtils {
         }
     }
 
-    private static void setUserAvatarPath(Context context, String avatarPath, ImageView view) {
+    public static void setUserAvatarPath(Context context, String avatarPath, ImageView view) {
         try {
             int avatarResId = Integer.parseInt(avatarPath);
             Glide.with(context).load(avatarResId).into(view);

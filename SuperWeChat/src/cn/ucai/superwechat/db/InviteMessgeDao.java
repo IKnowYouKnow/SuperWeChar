@@ -13,10 +13,10 @@
  */
 package cn.ucai.superwechat.db;
 
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
+
+import java.util.List;
 
 import cn.ucai.superwechat.domain.InviteMessage;
 
@@ -30,6 +30,9 @@ public class InviteMessgeDao {
 	static final String COLUMN_NAME_TIME = "time";
 	static final String COLUMN_NAME_REASON = "reason";
 	public static final String COLUMN_NAME_STATUS = "status";
+	public static final String COLUMN_USER_NICK = "nick";
+	public static final String COLUMN_USER_AVATAR = "userAvatar";
+
 	static final String COLUMN_NAME_ISINVITEFROMME = "isInviteFromMe";
 	static final String COLUMN_NAME_GROUPINVITER = "groupinviter";
 	

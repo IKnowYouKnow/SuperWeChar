@@ -17,6 +17,8 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.utils.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
 
 /**
@@ -33,6 +35,8 @@ public class FriendProfileActivity extends BaseActivity {
     User user;
     String friendNick;
     ProgressDialog progressDialog;
+    IUserModel mModel;
+    InviteMessage msg;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -58,19 +62,17 @@ public class FriendProfileActivity extends BaseActivity {
 
     private void initData() {
         user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUser();
-        mMyNick.setText("我是"+user.getMUserNick());
-        friendNick = getIntent().getStringExtra(I.User.NICK);
-        mFriendNick.setHint(friendNick);
-    }
-
-    @OnClick(R.id.btn_send)
-    public void addFriend() {
-        addContact();
+        if (user != null) {
+            mMyNick.setText("我是" + user.getMUserNick());
+            friendNick = getIntent().getStringExtra(I.User.NICK);
+            mFriendNick.setHint(friendNick);
+        }
     }
 
     /**
      * add contact
      */
+    @OnClick(R.id.btn_send)
     public void addContact() {
         if (EMClient.getInstance().getCurrentUser().equals(friendNick)) {
             new EaseAlertDialog(this, R.string.not_add_myself).show();
@@ -118,5 +120,6 @@ public class FriendProfileActivity extends BaseActivity {
             }
         }).start();
     }
+
 
 }
