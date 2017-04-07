@@ -82,4 +82,13 @@ public class UserModel implements IUserModel {
                 .targetClass(String.class)
                 .execute(listener);
     }
+
+    @Override
+    public void loadAllContact(Context context, String username, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST)
+                .addParam(I.User.USER_NAME,username)
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }
