@@ -735,11 +735,11 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
-            addContact();
+            addContact(username);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
-        private void addContact() {
-            mModel.addContact(appContext, SuperWeChatHelper.getInstance().getCurrentUsernName(), username,
+        private void addContact(String cname) {
+            mModel.addContact(appContext, SuperWeChatHelper.getInstance().getCurrentUsernName(), cname,
                     new OnCompleteListener<String>() {
                         @Override
                         public void onSuccess(String s) {
@@ -1255,7 +1255,7 @@ public class SuperWeChatHelper {
         }
     }
 
-    public void asyncFetchAppGroupsFromServer(){
+    public void asyncFetchAppContactsFromServer(){
         mModel.loadAllContact(appContext, EMClient.getInstance().getCurrentUser(),
                 new OnCompleteListener<String>() {
                     @Override
@@ -1299,7 +1299,6 @@ public class SuperWeChatHelper {
        }
        
        isSyncingGroupsWithServer = true;
-       asyncFetchAppGroupsFromServer();
        new Thread(){
            @Override
            public void run(){
@@ -1346,12 +1345,13 @@ public class SuperWeChatHelper {
    }
    
    public void asyncFetchContactsFromServer(final EMValueCallBack<List<String>> callback){
+       Log.d(TAG, "asyncFetchContactsFromServer: +++++++++++++++++++++");
        if(isSyncingContactsWithServer){
            return;
        }
        
        isSyncingContactsWithServer = true;
-       
+       asyncFetchAppContactsFromServer();
        new Thread(){
            @Override
            public void run(){

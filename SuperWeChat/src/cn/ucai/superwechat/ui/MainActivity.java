@@ -34,6 +34,7 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
@@ -84,10 +85,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     DMTabHost mLayoutTabhost;
     @BindView(R.id.layout_title)
     EaseTitleBar mLayoutTitle;
-    // textview for unread message count
-//    private TextView unreadLabel;
+//     textview for unread message count
+    private TextView unreadLabel;
 //    // textview for unread event message
-//    private TextView unreadAddressLable;
+    private TextView unreadAddressLable;
 
     private Button[] mTabs;
     private ContactListFragment contactListFragment;
@@ -118,10 +119,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         setContentView(R.layout.em_activity_main);
         ButterKnife.bind(this);
+        initView();
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
 
-        initView();
+
         umengInit();
 
         showExceptionDialogFromIntent(getIntent());
@@ -214,7 +216,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * init views
      */
     private void initView() {
-//		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
+		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
 //		unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
 //		mTabs = new Button[3];
 //		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
@@ -465,13 +467,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * update unread message count
      */
     public void updateUnreadLabel() {
-//        int count = getUnreadMsgCountTotal();
-//        if (count > 0) {
+        int count = getUnreadMsgCountTotal();
+        if (count > 0) {
+            mLayoutTabhost.setUnreadCount(0,count);
 //            unreadLabel.setText(String.valueOf(count));
 //            unreadLabel.setVisibility(View.VISIBLE);
-//        } else {
+        } else {
 //            unreadLabel.setVisibility(View.INVISIBLE);
-//        }
+//            mLayoutTabhost.setVisibility(View.GONE);
+        }
     }
 
     /**

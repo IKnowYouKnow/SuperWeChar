@@ -81,6 +81,7 @@ public class EaseConversationList extends ListView {
         adapter.setTimeColor(timeColor);
         adapter.setTimeSize(timeSize);
         setAdapter(adapter);
+
     }
     
     Handler handler = new Handler() {

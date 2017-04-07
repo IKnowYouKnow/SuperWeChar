@@ -230,6 +230,7 @@ public class UserProfileManager {
     }
 
     public void asyncGetCurrentAppUserInfo() {
+        Log.i("main","UserProfileManager,asyncGetCurrentAppUserInfo,username="+EMClient.getInstance().getCurrentUser());
         mModel.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
