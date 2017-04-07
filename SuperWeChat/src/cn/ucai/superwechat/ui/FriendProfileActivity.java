@@ -17,8 +17,6 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
-import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.utils.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
 
 /**
@@ -35,8 +33,6 @@ public class FriendProfileActivity extends BaseActivity {
     User user;
     String friendNick;
     ProgressDialog progressDialog;
-    IUserModel mModel;
-    InviteMessage msg;
 
     @Override
     protected void onCreate(Bundle arg0) {

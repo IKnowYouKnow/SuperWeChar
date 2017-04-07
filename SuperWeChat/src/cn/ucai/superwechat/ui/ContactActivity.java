@@ -66,9 +66,9 @@ public class ContactActivity extends BaseActivity {
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
         if (user != null) {
 
-        }else {
+        } else {
             user = new User();
-            msg = (InviteMessage)getIntent().getSerializableExtra(I.User.NICK);
+            msg = (InviteMessage) getIntent().getSerializableExtra(I.User.NICK);
             user.setMUserName(msg.getFrom());
             user.setMUserNick(msg.getNick());
             user.setAvatar(msg.getUserAvatar());
@@ -143,5 +143,10 @@ public class ContactActivity extends BaseActivity {
 
                     }
                 });
+    }
+
+    @OnClick(R.id.send_msg)
+    public void sendMsg() {
+        MFGT.gotoChatActivity(ContactActivity.this, user);
     }
 }
