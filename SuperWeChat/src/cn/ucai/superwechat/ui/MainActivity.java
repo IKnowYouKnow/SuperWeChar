@@ -58,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.adapter.MainTabAdpter;
@@ -71,6 +72,7 @@ import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
 import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
+
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
@@ -624,6 +626,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        boolean isChat = intent.getBooleanExtra(I.IS_CHAT, false);
+        if (isChat) {
+            mLayoutTabhost.setChecked(0);
+            mLayoutViewpage.setCurrentItem(0);
+        }
         showExceptionDialogFromIntent(intent);
     }
 

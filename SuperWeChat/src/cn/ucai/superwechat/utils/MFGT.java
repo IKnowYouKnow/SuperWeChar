@@ -45,6 +45,10 @@ public class MFGT {
         startActivity(activity, MainActivity.class);
     }
 
+    public static void gotoMain(Activity activity,boolean isChat){
+        startActivity(activity,new Intent(activity,MainActivity.class)
+        .putExtra(I.IS_CHAT,isChat));
+    }
 
     public static void startActivityForResult(Activity activity, Intent intent, int requestCode) {
         activity.startActivityForResult(intent,requestCode);
