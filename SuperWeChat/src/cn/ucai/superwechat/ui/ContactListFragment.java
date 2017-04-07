@@ -41,6 +41,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.widget.ContactItemView;
 
 /**
@@ -122,9 +123,10 @@ public class ContactListFragment extends EaseContactListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 User user = (User)listView.getItemAtPosition(position);
                 if (user != null) {
-                    String username = user.getMUserName();
+//                    String username = user.getMUserName();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+//                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                    MFGT.gotoContact(getActivity(),user);
                 }
             }
         });
