@@ -1,14 +1,12 @@
 package com.hyphenate.easeui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -16,8 +14,10 @@ import android.widget.RelativeLayout;
 
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
-import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EaseContactList extends RelativeLayout {
     protected static final String TAG = EaseContactList.class.getSimpleName();
@@ -95,6 +95,7 @@ public class EaseContactList extends RelativeLayout {
      */
     public void init(List<User> contactList){
     	this.contactList = contactList;
+        Log.i("main", "EaseContactList,contactList=" + contactList);
         adapter = new EaseContactAdapter(context, 0, new ArrayList<User>(contactList));
         adapter.setPrimaryColor(primaryColor).setPrimarySize(primarySize).setInitialLetterBg(initialLetterBg)
             .setInitialLetterColor(initialLetterColor);

@@ -1127,6 +1127,7 @@ public class SuperWeChatHelper {
             return new Hashtable<String, User>();
         }
 
+        Log.d("mingYue", "getAppContactList: " + appContactList);
         return appContactList;
     }
     /**

@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -245,6 +246,8 @@ public class EaseContactListFragment extends EaseBaseFragment {
                         //filter out users in blacklist
                         User user = entry.getValue();
                         EaseCommonUtils.setAppUserInitialLetter(user);
+
+                        Log.d("mingYue", "getContactList: " + user.toString());
                         contactList.add(user);
                     }
                 }

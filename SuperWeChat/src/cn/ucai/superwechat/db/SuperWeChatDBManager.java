@@ -150,7 +150,7 @@ public class SuperWeChatDBManager {
             Cursor cursor = db.rawQuery("select * from " + UserDao.TB_NAME /* + " desc" */, null);
             while (cursor.moveToNext()) {
                 User user = new User();
-                String username = cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NICK));
+                String username = cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_USERNAEM));
                 user.setMUserName(username);
                 user.setMUserNick(cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_NICK)));
                 user.setMAvatarId(cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_ID)));

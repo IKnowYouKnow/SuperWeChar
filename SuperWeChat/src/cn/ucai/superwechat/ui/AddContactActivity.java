@@ -16,6 +16,7 @@ package cn.ucai.superwechat.ui;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -88,6 +89,7 @@ public class AddContactActivity extends BaseActivity {
                     Result result = ResultUtils.getResultFromJson(s, User.class);
                     if (result != null && result.isRetMsg()) {
                         User user = (User) result.getRetData();
+                        Log.i("main", "AddContactActivity,user=" + user);
                         success = true;
                         progressDialog.dismiss();
                         MFGT.gotoContact(AddContactActivity.this,user);

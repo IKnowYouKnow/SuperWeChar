@@ -244,6 +244,7 @@ public class UserProfileManager {
                             setCurrentAppUserAvatar(user.getAvatar());
                             currentAppUser.cloneByOther(user);
                             SuperWeChatHelper.getInstance().saveAppContact(user);
+                            Log.i("main", "UserProfileManager,asyncGetCurrentAppUserInfo,user=" + user);
                         }
                     }
                 }

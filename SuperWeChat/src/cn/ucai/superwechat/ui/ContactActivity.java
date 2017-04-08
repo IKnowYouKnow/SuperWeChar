@@ -64,11 +64,13 @@ public class ContactActivity extends BaseActivity {
 
     private void initData() {
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+        Log.d("mingYue", "initData: " + user);
         if (user != null) {
 
         } else {
             user = new User();
             msg = (InviteMessage) getIntent().getSerializableExtra(I.User.NICK);
+            Log.d("mingYue", "initData: " + msg);
             user.setMUserName(msg.getFrom());
             user.setMUserNick(msg.getNick());
             user.setAvatar(msg.getUserAvatar());
@@ -89,6 +91,7 @@ public class ContactActivity extends BaseActivity {
         Log.i("main", "ContactActivity,isFriend=" + isFriend);
         if (isFriend) {
             SuperWeChatHelper.getInstance().saveAppContact(user);
+            Log.i("main", "ContactActivity,initView,user=" + user);
         }
         EaseUserUtils.setAppUserAvatar(ContactActivity.this, user.getMUserName(), mIvAvatar);
         mTvUsername.setText("微信号：" + user.getMUserName());
@@ -132,6 +135,7 @@ public class ContactActivity extends BaseActivity {
                                         dao.updateMessage(msg.getId(), values);
                                     } else if (isFriend) {
                                         SuperWeChatHelper.getInstance().saveAppContact(u);
+                                        Log.i("main", "ContactActivity,syncUserInfo,u=" + u);
                                     }
                                 }
                             }
