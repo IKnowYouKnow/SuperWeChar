@@ -26,4 +26,6 @@ public interface IUserModel {
 
     void loadAllContact(Context context,String username,OnCompleteListener<String> listener);
 
+    void delContact(Context context, String username, String cname, OnCompleteListener<String> listener);
+
 }

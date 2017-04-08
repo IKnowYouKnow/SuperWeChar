@@ -42,7 +42,12 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.utils.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.utils.Result;
+import cn.ucai.superwechat.utils.ResultUtils;
+import cn.ucai.superwechat.utils.UserModel;
 import cn.ucai.superwechat.widget.ContactItemView;
 
 /**
@@ -58,6 +63,9 @@ public class ContactListFragment extends EaseContactListFragment {
     private View loadingView;
     private ContactItemView applicationItem;
     private InviteMessgeDao inviteMessgeDao;
+    IUserModel mModel;
+    ProgressDialog pd;
+
 
     @SuppressLint("InflateParams")
     @Override
@@ -89,6 +97,9 @@ public class ContactListFragment extends EaseContactListFragment {
         super.refresh();
         if(inviteMessgeDao == null){
             inviteMessgeDao = new InviteMessgeDao(getActivity());
+        }
+        if (mModel == null) {
+            mModel = new UserModel();
         }
         if(inviteMessgeDao.getUnreadMessagesCount() > 0){
             applicationItem.showUnreadMsgView();
@@ -235,43 +246,71 @@ public class ContactListFragment extends EaseContactListFragment {
 	 */
 	public void deleteContact(final User tobeDeleteUser) {
 		String st1 = getResources().getString(R.string.deleting);
-		final String st2 = getResources().getString(R.string.Delete_failed);
-		final ProgressDialog pd = new ProgressDialog(getActivity());
+        pd = new ProgressDialog(getActivity());
 		pd.setMessage(st1);
 		pd.setCanceledOnTouchOutside(false);
 		pd.show();
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getMUserName());
-					// remove user from memory and database
-					UserDao dao = new UserDao(getActivity());
-					dao.deleteContact(tobeDeleteUser.getMUserName());
-					SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							pd.dismiss();
-							contactList.remove(tobeDeleteUser);
-							contactListLayout.refresh();
-
-						}
-					});
-				} catch (final Exception e) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							pd.dismiss();
-							Toast.makeText(getActivity(), st2 + e.getMessage(), Toast.LENGTH_LONG).show();
-						}
-					});
-
-				}
-
-			}
-		}).start();
+        removeContact(tobeDeleteUser);
 
 	}
-	
-	class ContactSyncListener implements DataSyncListener{
+private void removeEMContact(final User tobeDeleteUser){
+    final String st2 = getResources().getString(R.string.Delete_failed);
+    new Thread(new Runnable() {
+        public void run() {
+            try {
+                EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getMUserName());
+                // remove user from memory and database
+                UserDao dao = new UserDao(getActivity());
+                dao.deleteAppContact(tobeDeleteUser.getMUserName());
+                SuperWeChatHelper.getInstance().getAppContactList().remove(tobeDeleteUser.getMUserName());
+                dao.deleteContact(tobeDeleteUser.getMUserName());
+                SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        pd.dismiss();
+                        contactList.remove(tobeDeleteUser);
+                        contactListLayout.refresh();
+
+                    }
+                });
+            } catch (final Exception e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), st2 + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+        }
+    }).start();
+}
+	private void removeContact(final User tobeDeleteUser){
+        final String st2 = getResources().getString(R.string.Delete_failed);
+        mModel.delContact(getActivity(), EMClient.getInstance().getCurrentUser(), tobeDeleteUser.getMUserName(),
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null) {
+                            Result result = ResultUtils.getResultFromJson(s, User.class);
+                            if (result != null && result.isRetMsg()) {
+                                removeEMContact(toBeProcessUser);
+                                pd.dismiss();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), st2 , Toast.LENGTH_LONG).show();
+
+                    }
+                });
+    }
+
+    class ContactSyncListener implements DataSyncListener{
         @Override
         public void onSyncComplete(final boolean success) {
             EMLog.d(TAG, "on contact list sync success:" + success);

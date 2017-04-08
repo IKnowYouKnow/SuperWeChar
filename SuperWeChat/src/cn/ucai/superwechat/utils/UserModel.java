@@ -15,9 +15,9 @@ public class UserModel implements IUserModel {
     public void register(Context context, String username, String nick, String password, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_REGISTER)
-                .addParam(I.User.USER_NAME,username)
-                .addParam(I.User.NICK,nick)
-                .addParam(I.User.PASSWORD,MD5.getMessageDigest(password))
+                .addParam(I.User.USER_NAME, username)
+                .addParam(I.User.NICK, nick)
+                .addParam(I.User.PASSWORD, MD5.getMessageDigest(password))
                 .post()
                 .targetClass(String.class)
                 .execute(listener);
@@ -27,7 +27,7 @@ public class UserModel implements IUserModel {
     public void unregister(Context context, String username, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_REGISTER)
-                .addParam(I.User.USER_NAME,username)
+                .addParam(I.User.USER_NAME, username)
                 .targetClass(String.class)
                 .execute(listener);
     }
@@ -36,8 +36,8 @@ public class UserModel implements IUserModel {
     public void login(Context context, String username, String password, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_REGISTER)
-                .addParam(I.User.USER_NAME,username)
-                .addParam(I.User.PASSWORD,MD5.getMessageDigest(password))
+                .addParam(I.User.USER_NAME, username)
+                .addParam(I.User.PASSWORD, MD5.getMessageDigest(password))
                 .targetClass(String.class)
                 .execute(listener);
     }
@@ -46,7 +46,7 @@ public class UserModel implements IUserModel {
     public void loadUserInfo(Context context, String username, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_FIND_USER)
-                .addParam(I.User.USER_NAME,username)
+                .addParam(I.User.USER_NAME, username)
                 .targetClass(String.class)
                 .execute(listener);
     }
@@ -55,8 +55,8 @@ public class UserModel implements IUserModel {
     public void updateAvatar(Context context, String username, File avatarFile, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_UPDATE_AVATAR)
-                .addParam(I.NAME_OR_HXID,username)
-                .addParam(I.AVATAR_TYPE,I.AVATAR_TYPE_USER_PATH)
+                .addParam(I.NAME_OR_HXID, username)
+                .addParam(I.AVATAR_TYPE, I.AVATAR_TYPE_USER_PATH)
                 .addFile2(avatarFile)
                 .post()
                 .targetClass(String.class)
@@ -67,8 +67,8 @@ public class UserModel implements IUserModel {
     public void updateNick(Context context, String username, String newNick, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
-                .addParam(I.User.USER_NAME,username)
-                .addParam(I.User.NICK,newNick)
+                .addParam(I.User.USER_NAME, username)
+                .addParam(I.User.NICK, newNick)
                 .targetClass(String.class)
                 .execute(listener);
     }
@@ -77,8 +77,8 @@ public class UserModel implements IUserModel {
     public void addContact(Context context, String username, String cname, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_ADD_CONTACT)
-                .addParam(I.Contact.USER_NAME,username)
-                .addParam(I.Contact.CU_NAME,cname)
+                .addParam(I.Contact.USER_NAME, username)
+                .addParam(I.Contact.CU_NAME, cname)
                 .targetClass(String.class)
                 .execute(listener);
     }
@@ -87,7 +87,17 @@ public class UserModel implements IUserModel {
     public void loadAllContact(Context context, String username, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_DOWNLOAD_CONTACT_ALL_LIST)
-                .addParam(I.Contact.USER_NAME,username)
+                .addParam(I.Contact.USER_NAME, username)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void delContact(Context context, String username, String cname, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_CONTACT)
+                .addParam(I.Contact.USER_NAME, username)
+                .addParam(I.Contact.CU_NAME, cname)
                 .targetClass(String.class)
                 .execute(listener);
     }
