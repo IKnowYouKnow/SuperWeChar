@@ -62,23 +62,32 @@ public class ContactActivity extends BaseActivity {
         ButterKnife.bind(this);
         mModel = new UserModel();
         initData();
-        initView();
     }
 
     private void initData() {
         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
         Log.d("mingYue", "initData: " + user);
-        if (user != null) {
-
-        } else {
-            user = new User();
+        if (user == null) {
             msg = (InviteMessage) getIntent().getSerializableExtra(I.User.NICK);
-            Log.d("mingYue", "initData: " + msg);
-            user.setMUserName(msg.getFrom());
-            user.setMUserNick(msg.getNick());
-            user.setAvatar(msg.getUserAvatar());
+            if (msg != null) {
+                user = new User();
+                Log.d("mingYue", "initData: " + msg);
+                user.setMUserName(msg.getFrom());
+                user.setMUserNick(msg.getNick());
+                user.setAvatar(msg.getUserAvatar());
+            }
         }
-
+        if (user == null) {
+            String username = getIntent().getStringExtra(I.User.TABLE_NAME);
+            if (username!=null)
+                user = new User(username);
+        }
+        if (user == null) {
+            MFGT.finish(ContactActivity.this);
+        }else {
+            initView();
+            syncUserInfo();
+        }
         mTitleBar.setLeftLayoutClickListener(listener);
     }
 
@@ -101,7 +110,7 @@ public class ContactActivity extends BaseActivity {
         EaseUserUtils.setAppUserNick(user, mTvNick);
 
         showButton(isFriend);
-        syncUserInfo();
+
     }
 
     private void showButton(boolean isFriend) {
