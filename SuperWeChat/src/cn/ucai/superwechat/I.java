@@ -3,6 +3,9 @@ package cn.ucai.superwechat;
 public interface I {
 
 	String IS_CHAT = "cn.ucai.superwechat.ischat";
+    int REQUEST_CODE_PICK_PIC = 10010;
+    int REQUEST_CODE_PICK_CONTACT = 10011;
+	int REQUEST_CODE_PICK_CUTTING= 10012;
 
     public static interface User {
 		String TABLE_NAME							=		"t_superwechat_user";

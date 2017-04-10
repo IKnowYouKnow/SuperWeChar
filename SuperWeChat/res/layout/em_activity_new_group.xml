@@ -70,8 +70,10 @@
         android:lines="5"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
+
     <RelativeLayout
+        android:id="@+id/layoutAvatar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginBottom="10dp"

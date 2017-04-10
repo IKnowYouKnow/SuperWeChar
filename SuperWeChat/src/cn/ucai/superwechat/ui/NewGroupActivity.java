@@ -13,9 +13,16 @@
  */
 package cn.ucai.superwechat.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +30,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +43,22 @@ import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.db.GroupModel;
 import cn.ucai.superwechat.db.IGroupModel;
 import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
+
+import static cn.ucai.superwechat.I.REQUEST_CODE_PICK_PIC;
+import static cn.ucai.superwechat.ui.UserProfileActivity.getAvatarPath;
 
 public class NewGroupActivity extends BaseActivity {
     private EditText groupNameEditText;
@@ -50,6 +69,10 @@ public class NewGroupActivity extends BaseActivity {
     private TextView secondTextView;
     IGroupModel mModel;
     String groupName;
+    RelativeLayout layoutAvatar;
+    ImageView groupAvatar;
+    String avatarName;
+    File mFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +84,14 @@ public class NewGroupActivity extends BaseActivity {
         publibCheckBox = (CheckBox) findViewById(R.id.cb_public);
         memberCheckbox = (CheckBox) findViewById(R.id.cb_member_inviter);
         secondTextView = (TextView) findViewById(R.id.second_desc);
+        layoutAvatar = (RelativeLayout) findViewById(R.id.layoutAvatar);
+        groupAvatar = (ImageView) findViewById(R.id.groupAvatar);
 
+        setListener();
+
+    }
+
+    private void setListener() {
         publibCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
@@ -73,6 +103,45 @@ public class NewGroupActivity extends BaseActivity {
                 }
             }
         });
+        layoutAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadHeadPhoto();
+            }
+        });
+    }
+    private void uploadHeadPhoto() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dl_title_upload_photo);
+        builder.setItems(new String[]{getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload)},
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        switch (which) {
+                            case 0:
+                                Toast.makeText(NewGroupActivity.this, getString(R.string.toast_no_support),
+                                        Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+                                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                                startActivityForResult(pickIntent, I.REQUEST_CODE_PICK_PIC);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+        builder.create().show();
+    }
+    private void updateRemoteNick(final String nickName) {
+        showDialog();
+        SuperWeChatHelper.getInstance().getUserProfileManager()
+                .updateCurrentUserNickName(nickName);
+        if (NewGroupActivity.this.isFinishing()) {
+            return;
+        }
     }
 
     /**
@@ -85,21 +154,85 @@ public class NewGroupActivity extends BaseActivity {
         } else {
             // select from contact list
             startActivityForResult(new Intent(this, GroupPickContactsActivity.class)
-                    .putExtra("groupName", groupName), 0);
+                    .putExtra("groupName", groupName), I.REQUEST_CODE_PICK_CONTACT);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_PICK_PIC:
+                if (data == null || data.getData() == null) {
+                    return;
+                }
+                startPhotoZoom(data.getData());
+                break;
+            case I.REQUEST_CODE_PICK_CUTTING:
+                if (data != null) {
+                    setPicToView(data);
+                }
+                break;
+            case I.REQUEST_CODE_PICK_CONTACT:
+                if (resultCode == RESULT_OK) {
+                    //new group
+                    showDialog();
+                    createEMGroup(data);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
+    public void startPhotoZoom(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", true);
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", 300);
+        intent.putExtra("outputY", 300);
+        intent.putExtra("return-data", true);
+        intent.putExtra("noFaceDetection", true);
+        startActivityForResult(intent, I.REQUEST_CODE_PICK_CUTTING);
+    }
 
-        if (resultCode == RESULT_OK) {
-            //new group
-            showDialog();
-            createEMGroup(data);
+    /**
+     * save the picture data
+     *
+     * @param picdata
+     */
+    private void setPicToView(Intent picdata) {
+        Bundle extras = picdata.getExtras();
+        if (extras != null) {
+            Bitmap photo = extras.getParcelable("data");
+            Drawable drawable = new BitmapDrawable(getResources(), photo);
+            groupAvatar.setImageDrawable(drawable);
+            saveBitmapFile(photo);
         }
 
+    }
+    private void saveBitmapFile(Bitmap bitmap) {
+        if (bitmap != null) {
+            String imagePath = getAvatarPath(NewGroupActivity.this, I.AVATAR_TYPE) + "/" + getAvatarName() + ".jpg";
+            File file = new File(imagePath);
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                bos.flush();
+                bos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mFile = file;
+        }
+    }
+
+    private String getAvatarName(){
+        avatarName = I.AVATAR_TYPE_GROUP_PATH+ System.currentTimeMillis();
+        return avatarName;
     }
 
     private void createEMGroup(Intent data) {
@@ -156,9 +289,9 @@ public class NewGroupActivity extends BaseActivity {
     private void createAppGroup(EMGroup emGroup) {
         if (emGroup != null) {
 
-            mModel.createGroup(NewGroupActivity.this, emGroup.getGroupId(), emGroup.getGroupName(), emGroup.getDescription(),
-                    emGroup.getOwner(), emGroup.isPublic(),
-                    emGroup.isMemberAllowToInvite(), null, new OnCompleteListener<String>() {
+            mModel.createGroup(NewGroupActivity.this, emGroup.getGroupId(), emGroup.getGroupName(),
+                    emGroup.getDescription(),emGroup.getOwner(), emGroup.isPublic(),
+                    emGroup.isMemberAllowToInvite(), mFile, new OnCompleteListener<String>() {
                         @Override
                         public void onSuccess(String s) {
                             boolean success = false;
