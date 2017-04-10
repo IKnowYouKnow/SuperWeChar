@@ -124,6 +124,7 @@ public class NewGroupActivity extends BaseActivity {
                                         Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
+
                                 Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                                 startActivityForResult(pickIntent, I.REQUEST_CODE_PICK_PIC);

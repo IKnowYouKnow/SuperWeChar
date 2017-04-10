@@ -131,6 +131,7 @@ public abstract class EaseChatRow extends LinearLayout {
         }
         
         if(ackedView != null){
+
             if (message.isAcked()) {
                 if (deliveredView != null) {
                     deliveredView.setVisibility(View.INVISIBLE);
