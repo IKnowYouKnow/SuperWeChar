@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
-        android:background="@color/top_bar_normal_bg"
+        android:background="@color/black2"
         android:gravity="center_vertical" >
 
         <LinearLayout
@@ -71,11 +71,35 @@
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:textSize="18sp" />
-    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/em_button_normal_shape">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dl_title_upload_photo"
+            android:padding="5dp"
+            android:textColor="#333"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"/>
+        <ImageView
+            android:id="@+id/groupAvatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/ease_group_icon"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
     
     <LinearLayout 
         android:layout_width="match_parent"
-       android:layout_height="39dp"
+        android:layout_height="39dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
