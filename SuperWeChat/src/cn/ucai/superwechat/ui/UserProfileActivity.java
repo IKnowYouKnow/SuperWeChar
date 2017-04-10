@@ -41,9 +41,9 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.CommonUtils;
-import cn.ucai.superwechat.utils.IUserModel;
+import cn.ucai.superwechat.db.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 public class UserProfileActivity extends BaseActivity {
 

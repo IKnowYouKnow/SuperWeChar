@@ -29,12 +29,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.utils.IUserModel;
+import cn.ucai.superwechat.db.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
-import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 public class AddContactActivity extends BaseActivity {
     @BindView(R.id.title_bar)

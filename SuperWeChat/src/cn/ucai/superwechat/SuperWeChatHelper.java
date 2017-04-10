@@ -63,12 +63,12 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
-import cn.ucai.superwechat.utils.IUserModel;
-import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.db.IUserModel;
+import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 public class SuperWeChatHelper {
     /**

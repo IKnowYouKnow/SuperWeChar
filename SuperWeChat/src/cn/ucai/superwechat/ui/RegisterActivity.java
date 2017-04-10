@@ -32,13 +32,13 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.CommonUtils;
-import cn.ucai.superwechat.utils.IUserModel;
+import cn.ucai.superwechat.db.IUserModel;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.MFGT;
-import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 /**
  * register screen

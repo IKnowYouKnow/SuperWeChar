@@ -1,10 +1,12 @@
-package cn.ucai.superwechat.utils;
+package cn.ucai.superwechat.db;
 
 import android.content.Context;
 
 import java.io.File;
 
 import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.utils.MD5;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 
 /**
  * Created by Administrator on 2017/3/29 0029.

@@ -18,12 +18,12 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
 import cn.ucai.superwechat.utils.CommonUtils;
-import cn.ucai.superwechat.utils.IUserModel;
-import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.db.IUserModel;
+import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 public class UserProfileManager {
     private static final String TAG = UserProfileManager.class.getSimpleName();

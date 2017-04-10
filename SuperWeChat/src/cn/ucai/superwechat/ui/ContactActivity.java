@@ -23,12 +23,12 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.utils.IUserModel;
+import cn.ucai.superwechat.db.IUserModel;
 import cn.ucai.superwechat.utils.MFGT;
-import cn.ucai.superwechat.utils.OnCompleteListener;
+import cn.ucai.superwechat.db.OnCompleteListener;
 import cn.ucai.superwechat.utils.Result;
 import cn.ucai.superwechat.utils.ResultUtils;
-import cn.ucai.superwechat.utils.UserModel;
+import cn.ucai.superwechat.db.UserModel;
 
 /**
  * Created by Administrator on 2017/4/5 0005.
