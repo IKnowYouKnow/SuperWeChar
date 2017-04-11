@@ -177,7 +177,7 @@ public class NewGroupActivity extends BaseActivity {
             case I.REQUEST_CODE_PICK_CONTACT:
                 if (resultCode == RESULT_OK) {
                     //new group
-                    showDialog();
+
                     createEMGroup(data);
                 }
                 break;
@@ -236,32 +236,38 @@ public class NewGroupActivity extends BaseActivity {
         return avatarName;
     }
 
-    private void createEMGroup(Intent data) {
-        final String st2 = getResources().getString(R.string.Failed_to_create_groups);
-        final String groupName = groupNameEditText.getText().toString().trim();
-        String desc = introductionEditText.getText().toString();
-        String[] members = data.getStringArrayExtra("newmembers");
-        try {
-            EMGroupOptions option = new EMGroupOptions();
-            option.maxUsers = 200;
-            option.inviteNeedConfirm = true;
+    private void createEMGroup(final Intent data) {
+        showDialog();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String st2 = getResources().getString(R.string.Failed_to_create_groups);
+                final String groupName = groupNameEditText.getText().toString().trim();
+                String desc = introductionEditText.getText().toString();
+                String[] members = data.getStringArrayExtra("newmembers");
+                try {
+                    EMGroupOptions option = new EMGroupOptions();
+                    option.maxUsers = 200;
+                    option.inviteNeedConfirm = true;
 
-            String reason = NewGroupActivity.this.getString(R.string.invite_join_group);
-            reason = EMClient.getInstance().getCurrentUser() + reason + groupName;
+                    String reason = NewGroupActivity.this.getString(R.string.invite_join_group);
+                    reason = EMClient.getInstance().getCurrentUser() + reason + groupName;
 
-            if (publibCheckBox.isChecked()) {
-                option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePublicJoinNeedApproval : EMGroupStyle.EMGroupStylePublicOpenJoin;
-            } else {
-                option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
-            }
-            EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-            Log.i("main", "NewGroupActivity,emGroup=" + groupName);
-            createAppGroup(group,members);
+                    if (publibCheckBox.isChecked()) {
+                        option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePublicJoinNeedApproval : EMGroupStyle.EMGroupStylePublicOpenJoin;
+                    } else {
+                        option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
+                    }
+                    EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+                    Log.i("main", "NewGroupActivity,emGroup=" + groupName);
+                    createAppGroup(group,members);
 
-        } catch (final HyphenateException e) {
+                } catch (final HyphenateException e) {
                     createSuccess(false);
                     Log.i("main","NewGroupActivity,EM=" + e);
                 }
+            }
+        }).start();
     }
 
     private void createSuccess(final boolean success) {
@@ -289,7 +295,6 @@ public class NewGroupActivity extends BaseActivity {
 
     private void createAppGroup(final EMGroup emGroup, final String[] members) {
         if (emGroup != null) {
-
             mModel.createGroup(NewGroupActivity.this, emGroup.getGroupId(), emGroup.getGroupName(),
                     emGroup.getDescription(),emGroup.getOwner(), emGroup.isPublic(),
                     emGroup.isMemberAllowToInvite(), mFile, new OnCompleteListener<String>() {
@@ -313,7 +318,6 @@ public class NewGroupActivity extends BaseActivity {
                                 createSuccess(success);
                             }
                         }
-
                         @Override
                         public void onError(String error) {
                             createSuccess(false);
