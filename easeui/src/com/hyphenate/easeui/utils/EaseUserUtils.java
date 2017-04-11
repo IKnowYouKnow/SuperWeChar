@@ -109,7 +109,16 @@ public class EaseUserUtils {
                     .placeholder(R.drawable.default_hd_avatar).into(view);
         }
     }
-
+    public static void setGroupAvatarPath(Context context, String avatarPath, ImageView view) {
+        try {
+            int avatarResId = Integer.parseInt(avatarPath);
+            Glide.with(context).load(avatarResId).into(view);
+        } catch (Exception e) {
+            //use default avatar
+            Glide.with(context).load(avatarPath).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.em_group_icon).into(view);
+        }
+    }
     /**
      * set user's nickname
      */

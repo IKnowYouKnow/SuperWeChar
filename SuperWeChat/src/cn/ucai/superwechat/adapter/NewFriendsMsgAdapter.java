@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.util.List;
@@ -92,14 +93,16 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
 				holder.groupname.setText(msg.getGroupName());
+				EaseUserUtils.setGroupAvatarPath(context, Group.getAvatar(msg.getGroupId()),holder.avator);
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
+				EaseUserUtils.setUserAvatarPath(context,msg.getUserAvatar(),holder.avator);
 			}
 			
 			holder.reason.setText(msg.getReason());
 			holder.name.setText(msg.getFrom());
 			holder.name.setText(msg.getNick());
-			EaseUserUtils.setUserAvatarPath(context,msg.getUserAvatar(),holder.avator);
+
 			holder.layoutItem.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
