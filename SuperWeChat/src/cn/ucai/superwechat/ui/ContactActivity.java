@@ -146,8 +146,8 @@ public class ContactActivity extends BaseActivity {
                                         InviteMessgeDao dao = new InviteMessgeDao(ContactActivity.this);
                                         dao.updateMessage(msg.getId(), values);
                                     } else if (isFriend) {
-                                        SuperWeChatHelper.getInstance().saveAppContact(u);
                                         Log.i("main", "ContactActivity,syncUserInfo,u=" + u);
+                                        SuperWeChatHelper.getInstance().getUserProfileManager().updateUserInfo(u);
                                     }
                                 }
                             }

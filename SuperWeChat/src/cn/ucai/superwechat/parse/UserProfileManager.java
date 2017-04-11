@@ -229,6 +229,11 @@ public class UserProfileManager {
 //        return avatarUrl;
     }
 
+    public void updateUserInfo(User user) {
+        setCurrentAppUserNick(user.getMUserNick());
+        setCurrentAppUserAvatar(user.getAvatar());
+        SuperWeChatHelper.getInstance().saveAppContact(user);
+    }
     public void asyncGetCurrentAppUserInfo() {
         Log.i("main","UserProfileManager,asyncGetCurrentAppUserInfo,username="+EMClient.getInstance().getCurrentUser());
         mModel.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
@@ -240,10 +245,8 @@ public class UserProfileManager {
                         Log.e(TAG, "onSuccess: result=" + result);
                         User user = (User) result.getRetData();
                         if (user != null) {
-                            setCurrentAppUserNick(user.getMUserNick());
-                            setCurrentAppUserAvatar(user.getAvatar());
+                            updateUserInfo(user);
                             currentAppUser.cloneByOther(user);
-                            SuperWeChatHelper.getInstance().saveAppContact(user);
                             Log.i("main", "UserProfileManager,asyncGetCurrentAppUserInfo,user=" + user);
                         }
                     }
