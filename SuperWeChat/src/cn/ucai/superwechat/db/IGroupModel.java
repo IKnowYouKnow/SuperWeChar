@@ -13,4 +13,6 @@ public interface IGroupModel {
                     boolean isPublic, boolean isInvites, File file, OnCompleteListener<String> listener);
 
     void addGroupMembers(Context context, String members, String hxid, OnCompleteListener<String> listener);
+
+    void removeUserFromGroup(Context context, String hxid, String username, OnCompleteListener<String> listener);
 }
