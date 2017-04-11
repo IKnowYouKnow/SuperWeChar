@@ -92,8 +92,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		    
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
-				holder.groupname.setText(msg.getGroupName());
+				holder.groupname.setText(msg.getGroupId());
 				EaseUserUtils.setGroupAvatarPath(context, Group.getAvatar(msg.getGroupId()),holder.avator);
+				holder.name.setText(msg.getGroupName());
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
 				EaseUserUtils.setUserAvatarPath(context,msg.getUserAvatar(),holder.avator);
