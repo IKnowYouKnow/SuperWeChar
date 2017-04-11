@@ -17,6 +17,8 @@ package cn.ucai.superwechat.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,6 +42,7 @@ import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.widget.EaseConversationList;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
@@ -60,7 +65,9 @@ public class PublicGroupsActivity extends BaseActivity {
     private ProgressBar footLoadingPB;
     private TextView footLoadingText;
     private Button searchBtn;
-    
+    EditText search;
+    EaseConversationList conversationListView;
+    ImageButton clearSearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +78,36 @@ public class PublicGroupsActivity extends BaseActivity {
 		listView = (ListView) findViewById(R.id.list);
 		groupsList = new ArrayList<EMGroupInfo>();
 		searchBtn = (Button) findViewById(R.id.btn_search);
-		
-		View footView = getLayoutInflater().inflate(R.layout.em_listview_footer_view, listView, false);
+        //////////////////////////////////////////////
+        search = (EditText) findViewById(R.id.query);
+
+        View footView = getLayoutInflater().inflate(R.layout.em_listview_footer_view, listView, false);
         footLoadingLayout = (LinearLayout) footView.findViewById(R.id.loading_layout);
         footLoadingPB = (ProgressBar)footView.findViewById(R.id.loading_bar);
         footLoadingText = (TextView) footView.findViewById(R.id.loading_text);
+//        conversationListView = (EaseConversationList) findViewById(R.id.list);
+        clearSearch = (ImageButton)findViewById(R.id.search_clear);
         listView.addFooterView(footView, null, false);
         footLoadingLayout.setVisibility(View.GONE);
 
         loadAndShowData();
 
+        search.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                conversationListView.filter(s);
+                if (s.length() > 0) {
+                    clearSearch.setVisibility(View.VISIBLE);
+                } else {
+                    clearSearch.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        });
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
