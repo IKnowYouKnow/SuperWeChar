@@ -256,7 +256,7 @@ public class NewGroupActivity extends BaseActivity {
             }
             EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
             Log.i("main", "NewGroupActivity,emGroup=" + groupName);
-            createAppGroup(group);
+            createAppGroup(group,members);
 
         } catch (final HyphenateException e) {
                     createSuccess(false);
@@ -287,7 +287,7 @@ public class NewGroupActivity extends BaseActivity {
         progressDialog.show();
     }
 
-    private void createAppGroup(EMGroup emGroup) {
+    private void createAppGroup(final EMGroup emGroup, final String[] members) {
         if (emGroup != null) {
 
             mModel.createGroup(NewGroupActivity.this, emGroup.getGroupId(), emGroup.getGroupName(),
@@ -301,11 +301,17 @@ public class NewGroupActivity extends BaseActivity {
                                 if (result != null && result.isRetMsg()) {
                                     Group group = (Group) result.getRetData();
                                     if (group != null) {
-                                        success = true;
+                                        if (members.length > 0) {
+                                            addGroupMembers(getMembers(members),emGroup.getGroupId());
+                                        }else {
+                                            success = true;
+                                        }
                                     }
                                 }
                             }
-                            createSuccess(success);
+                            if (members.length <= 0) {
+                                createSuccess(success);
+                            }
                         }
 
                         @Override
@@ -317,6 +323,34 @@ public class NewGroupActivity extends BaseActivity {
         }
     }
 
+    private String getMembers(String[] members) {
+        StringBuffer sb = new StringBuffer();
+        for (String str : members) {
+            sb.append(str).append(",");
+        }
+        return sb.toString();
+    }
+
+    private void addGroupMembers(String members, String hxid) {
+        mModel.addGroupMembers(NewGroupActivity.this, members, hxid, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                boolean success = false;
+                if (s != null) {
+                    Result result = ResultUtils.getResultFromJson(s, Group.class);
+                    if (result != null && result.isRetMsg()) {
+                        success = true;
+                    }
+                }
+                createSuccess(success);
+            }
+
+            @Override
+            public void onError(String error) {
+                createSuccess(false);
+            }
+        });
+    }
     public void back(View view) {
         finish();
     }

@@ -11,4 +11,6 @@ import java.io.File;
 public interface IGroupModel {
     void createGroup(Context context, String hxId, String groupName, String des, String owner,
                     boolean isPublic, boolean isInvites, File file, OnCompleteListener<String> listener);
+
+    void addGroupMembers(Context context, String members, String hxid, OnCompleteListener<String> listener);
 }
