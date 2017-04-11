@@ -474,7 +474,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //            unreadLabel.setVisibility(View.VISIBLE);
         } else {
 //            unreadLabel.setVisibility(View.INVISIBLE);
-//            mLayoutTabhost.setVisibility(View.GONE);
+            mLayoutTabhost.setUnreadCount(0,0);
         }
     }
 
